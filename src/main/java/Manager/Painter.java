@@ -40,26 +40,69 @@ public class Painter {
      * drawType
      */
     private PaintType type=PaintType.PEN;
+    
+    
     /**
      *
      */
     private boolean mousePress=false;
+
+    private double lastX = 0.0;
+    private double lastY = 0.0;
+    
+    
     /**
-     * canvas
+     * current canvas
      */
     private Canvas currentCanvas;
-
+    /**
+     * the back canvas
+     */
+	private Canvas backCanvas;
+	/**
+	 * tempCanvas,used for temp draw such as rect tool,line tool which need to indicate what will
+	 * be draw
+	 */
+	private Canvas tempCanvas;
+	/**
+	 * 
+	 */
+	private int autoGrowID=1;
+	
+	/**
+	 * save all canvas beside temp and back canvas
+	 */
     private ObservableList<CanvasLayer> canvaList=FXCollections.observableArrayList();
 
-    public double lastX = 0.0;
-    public double lastY = 0.0;
-	private Canvas backCanvas;
+    
+    
+    /**
+     * stroke color,used for pen
+     */
 	private Paint strokeColor=Color.BLACK;
+	/**
+	 * line width
+	 */
 	private double lineWidth=1;
+	/**
+	 * draw alpha
+	 */
 	private double alpha=1;
+	/**
+	 * the size of the eraser
+	 */
 	private double eraserSize=1;
-	private Paint fillColor=Color.WHITE;
-	private int autoGrowID=1;
+	/**
+	 * fill color
+	 */
+	private Paint fillColor=Color.BLACK;
+
+
+	private double shapeDrawStartX;
+
+
+	private double shapeDrawStartY;
+	
 
 
 
@@ -73,6 +116,21 @@ public class Painter {
         {
         	fill();
         }
+        else if(type==PaintType.LINE)
+        {
+        	shapeDrawStartX=x;
+        	shapeDrawStartY=y;
+        }
+        else if(type==PaintType.CIRCLE)
+        {
+        	shapeDrawStartX=x;
+        	shapeDrawStartY=y;
+        }
+        else if(type==PaintType.RECT)
+        {
+        	shapeDrawStartX=x;
+        	shapeDrawStartY=y;
+        }
     }
 
     private void fill() {
@@ -85,14 +143,26 @@ public class Painter {
 	
        if(type==PaintType.PEN&&mousePress)
        {
-    	 
-            drawLine(lastX,lastY,x,y);
-           
-            
+            drawLine(lastX,lastY,x,y);  
        }
        else if(type==PaintType.ERASER&&mousePress)
        {
-    	   clearRect(x,y);
+    	   clearRectBySize(x,y);
+       }
+       else if(type==PaintType.LINE)
+       {
+    	   clearCanvas(tempCanvas);
+    	   drawLine(shapeDrawStartX, shapeDrawStartY, x, y,tempCanvas);
+       }
+       else if(type==PaintType.CIRCLE)
+       {
+//    	   clearCanvas(tempCanvas);
+//    	   d(shapeDrawStartX, shapeDrawStartY, x, y,tempCanvas);
+       }
+       else if(type==PaintType.RECT)
+       {
+    	   clearCanvas(tempCanvas);
+    	   drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY,tempCanvas);
        }
 
        lastX=x;
@@ -101,20 +171,36 @@ public class Painter {
     }
 
     
-    private void clearRect(double x, double y) {
-    	 currentCanvas.getGraphicsContext2D().clearRect(x, y, eraserSize, eraserSize);
+    private void drawRect(double x, double y, double width, double height, Canvas canvas) {
+		canvas.getGraphicsContext2D().fillRect(x, y, width, height);
 		
 	}
 
-	private void drawLine(double lastX, double lastY, double x, double y) {
+	private void clearRectBySize(double width, double height) {
+    	 currentCanvas.getGraphicsContext2D().clearRect(width, height, eraserSize, eraserSize);
+	}
 
-	
-        currentCanvas.getGraphicsContext2D().strokeLine(lastX,lastY,x,y);
-      
+	private void drawLine(double lastX, double lastY, double x, double y) {
+       drawLine(lastX, lastY, x, y,currentCanvas);
     }
 
-    public void mouseUp(double x, double y) {
+    private void drawLine(double lastX, double lastY, double x, double y, Canvas canvas) {
+    	canvas.getGraphicsContext2D().strokeLine(lastX,lastY,x,y);
+		
+	}
+
+	public void mouseUp(double x, double y) {
         mousePress=false;
+        //clear temp canvas
+        clearCanvas(tempCanvas);
+        if(type==PaintType.LINE)
+        {
+     	   drawLine(shapeDrawStartX, shapeDrawStartY, x, y,currentCanvas);
+        }
+        else if(type==PaintType.RECT)
+        {
+        	drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY, currentCanvas);
+        }
     }
 
     public void setCanvas(Canvas canvas) {
@@ -146,9 +232,9 @@ public class Painter {
 		
 	}
 
-	public void addBackCanvas(Canvas back) {
+	public void setBackCanvas(Canvas back) {
 		this.backCanvas=back;
-		backCanvas.getGraphicsContext2D().setFill(fillColor);
+		backCanvas.getGraphicsContext2D().setFill(Color.WHITE);
 		redrawBackCanvas();
 	}
 
@@ -235,11 +321,11 @@ public class Painter {
 		return currentCanvas;
 	}
 
-	public void clearCanvas() {
+	public void clearCanvas(Canvas canvas) {
 		
-		if(currentCanvas!=null)
+		if(canvas!=null)
 		{
-			currentCanvas.getGraphicsContext2D().clearRect(0, 0, currentCanvas.getWidth(), currentCanvas.getHeight());
+			canvas.getGraphicsContext2D().clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		}
 		
 	}
@@ -250,5 +336,15 @@ public class Painter {
 		{
 			currentCanvas.getGraphicsContext2D().drawImage(image, 0, 0);
 		}
+	}
+
+	public void setTempCanvas(Canvas canvas) {
+		this.tempCanvas=canvas;
+		
+	}
+
+	public void clearCurrentCanvas() {
+		clearCanvas(currentCanvas);
+		
 	}
 }

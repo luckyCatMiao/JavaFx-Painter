@@ -1,4 +1,4 @@
-package Controller;
+package Controller.ToolController;
 
 import Paint.Config;
 import javafx.beans.value.ChangeListener;
@@ -6,7 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollBar;
 
-public class Tool_Eraser_Controller extends ToolController {
+public class Tool_Eraser_Controller extends BaseToolController {
 	
 	@FXML
 	private ScrollBar eraserBar;

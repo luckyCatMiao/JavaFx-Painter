@@ -1,4 +1,4 @@
-package Controller;
+package Controller.ToolController;
 
 import Paint.Config;
 import javafx.event.ActionEvent;
@@ -6,7 +6,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 
-public class Tool_Bucket_Controller extends ToolController {
+public class Tool_Bucket_Controller extends BaseToolController {
 
 	@FXML
 	private ColorPicker bucketColorPicker;

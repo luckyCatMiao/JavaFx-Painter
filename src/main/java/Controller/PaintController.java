@@ -4,6 +4,7 @@ package Controller;
 import Bean.CanvasLayer;
 import Bean.ToolIcon;
 import Cell.CanvasLayerCell;
+import Controller.Component.StageComponent;
 import Manager.PaintType;
 import Manager.ToolManager;
 import Tool.Tool;
@@ -15,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -30,13 +30,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -56,41 +51,27 @@ public class PaintController extends BaseController{
 	private Stage stage;
 	private Parent root;
 	
+	private StageComponent stageComponent;
+	
 	public PaintController(Stage primaryStage) {
+		
 		stage = primaryStage;
 		this.root=loadFxml("Main");
-		initStage();		
 		createWindow(primaryStage, root, "Paint");
+		initStage();
 		initView();
-		initDrapAndDrop();
-
+	
+		
+		
 	}
 
-	private void initStage() {
-		stage.setFullScreen(true);
-		stage.setFullScreenExitHint("按G键切换全屏模式");
-		stage.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent event) {
-				
-				if(event.getCode().equals(KeyCode.G))
-				{
-					if(stage.fullScreenProperty().get()==true)
-					{
-						
-						stage.setFullScreen(false);
-					}
-					else
-					{
-						stage.setFullScreen(true);
-					}
-				}
-				event.consume();
-				
-			}
-		});
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	
+	private void initStage() {
+		this.stageComponent=new StageComponent(this,stage);
+		stageComponent.initDragAndDrop(url->addImageToNewCanvasByUrl(url));
+		stageComponent.initToggleFullScreen();
+		stageComponent.setOnCloseListener(new EventHandler<WindowEvent>() {
 
 			@Override
 			public void handle(WindowEvent event) {
@@ -99,33 +80,10 @@ public class PaintController extends BaseController{
 			}
 		});
 		
-	
-	
+		
 	}
 
-	private void initDrapAndDrop() {
-			stage.getScene().setOnDragOver((DragEvent event) -> {
-			Dragboard db = event.getDragboard();
-			if(db.hasUrl())
-			{			
-			event.acceptTransferModes(TransferMode.LINK);
-			} else {
-			event.consume();
-			}
-			});
-		
-			
-			stage.getScene().setOnDragDropped((DragEvent event) -> {
-				Dragboard db = event.getDragboard();
-				if(db.hasUrl())
-				{
-					addImageToNewCanvasByUrl(db.getUrl());
-				
-				} else {
-				event.consume();
-				}
-				});
-	}
+
 
 	/**
 	 * add a outer image to the new canvas
@@ -135,15 +93,13 @@ public class PaintController extends BaseController{
 		createNewLayer();
 		Image image=new Image(url);
 		painter.drawImage(image);
-		
-		
 	}
 
 	private void initView() {
 		initLayerList();
 		initCanvas();
 		initToolsPane();
-		initStackPane();
+		initMouseEvent();
 		initContextMenu();
 	}
 
@@ -179,11 +135,11 @@ public class PaintController extends BaseController{
 	}
 
 	protected void clearCurrentCanvas() {
-		painter.clearCanvas();
+		painter.clearCurrentCanvas();
 		
 	}
 
-	private void initStackPane() {
+	private void initMouseEvent() {
 
 		stackPane.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 			@Override
@@ -307,39 +263,36 @@ public class PaintController extends BaseController{
 	private void initCanvas(){
 		
 		//add back canvas(this will not visible in the layer list)
-		createBackCanvas();
+		painter.setBackCanvas(createCanvasAndAddToPane());
 		//add default canvas
-		createNormalCanvas();
+		painter.addCanvas(createCanvasAndAddToPane());
 		canvasLV.getSelectionModel().selectFirst();
 		CanvasLayer canvasLayer=canvasLV.getSelectionModel().getSelectedItem();
 		painter.setCurrentCanvas(canvasLayer);
-
+		//create temp canvas
+		painter.setTempCanvas(createCanvasAndAddToPane());
 		
 		
 	}
 
-	private void createBackCanvas() {
+	
+
+	private Canvas createCanvasAndAddToPane() {
 		Canvas canvas=new Canvas();
 		canvas.setWidth(1500);
 		canvas.setHeight(1000);
 		stackPane.getChildren().add(canvas);
-		painter.addBackCanvas(canvas);
-		
+		return canvas;
 	}
 
-	private void createNormalCanvas() {
-		Canvas canvas=new Canvas();
-		canvas.setWidth(1500);
-		canvas.setHeight(1000);
-		stackPane.getChildren().add(canvas);
-		painter.addCanvas(canvas);
-		
-	}
+	
+
+	
 
 	@FXML
 	public void createNewLayer()
 	{
-		createNormalCanvas();
+		painter.addCanvas(createCanvasAndAddToPane());
 		selectLastCanvas();
 		
 	}

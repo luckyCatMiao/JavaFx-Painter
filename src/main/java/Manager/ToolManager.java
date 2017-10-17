@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import Bean.ToolIcon;
-import Controller.ToolController;
-import Controller.Tool_Bucket_Controller;
-import Controller.Tool_Eraser_Controller;
-import Controller.Tool_Pen_Controller;
+import Controller.ToolController.BaseToolController;
+import Controller.ToolController.Tool_Bucket_Controller;
+import Controller.ToolController.Tool_Eraser_Controller;
+import Controller.ToolController.Tool_Pen_Controller;
 import Paint.Config;
 import Tool.Tool;
 import javafx.collections.FXCollections;
@@ -22,7 +22,7 @@ import javafx.scene.image.Image;
  */
 public class ToolManager {
 
-    private static HashMap<PaintType, ToolController> map=new HashMap<>();
+    private static HashMap<PaintType, BaseToolController> map=new HashMap<>();
 	private static List<ToolIcon> list;
 
 	/**
@@ -90,7 +90,7 @@ public class ToolManager {
 	 * @param type
 	 * @return
 	 */
-	public static ToolController getToolPaneRootByType(PaintType type) {
+	public static BaseToolController getToolPaneRootByType(PaintType type) {
 		if(map.get(type)==null)
 		{
 			switch (type) {

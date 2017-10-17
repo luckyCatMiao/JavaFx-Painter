@@ -1,4 +1,4 @@
-package Controller;
+package Controller.ToolController;
 
 import Paint.Config;
 import javafx.beans.value.ChangeListener;
@@ -8,7 +8,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.paint.Color;
 
-public class Tool_Pen_Controller extends ToolController {
+public class Tool_Pen_Controller extends BaseToolController {
 
 	@FXML
 	private ColorPicker colorPicker;
