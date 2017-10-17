@@ -1,0 +1,6 @@
+.tooltip {    
+    -fx-background-color: linear-gradient(#e2ecfe, #99bcfd);
+}
+.page-corner {
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 50%,#3278fa,#99bcfd);
+}
