@@ -1,20 +1,10 @@
 package Controller.ToolController;
 
 import Controller.BaseController;
-import javafx.scene.Parent;
+import javafx.fxml.Initializable;
 
-public class BaseToolController extends BaseController{
+public abstract class BaseToolController extends BaseController implements Initializable{
 
-	protected Parent root;
-	
-	public BaseToolController() {
-		
-	}
 
-	
-	public Parent getRoot() {
-		// TODO Auto-generated method stub
-		return root;
-	}
 
 }

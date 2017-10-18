@@ -1,5 +1,8 @@
 package Controller.ToolController;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import Paint.Config;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,13 +15,17 @@ public class Tool_Eraser_Controller extends BaseToolController {
 	private ScrollBar eraserBar;
 	
 	public Tool_Eraser_Controller() {
-		root=loadFxml(Config.TOOL_FXML_ERASER);
 		
-		initView();
+		
+		
 		
 	}
 
+	
+	
+	
 	private void initView() {
+		painter.setEraserWidth(eraserBar.getValue());
 		eraserBar.valueProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -26,6 +33,12 @@ public class Tool_Eraser_Controller extends BaseToolController {
 				painter.setEraserWidth(newValue.doubleValue());
 			}
 		});
+		
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		initView();
 		
 	}
 	

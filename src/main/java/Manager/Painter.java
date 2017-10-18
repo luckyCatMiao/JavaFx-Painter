@@ -17,6 +17,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.StrokeLineCap;
 
 /**
  * Created by Administrator on 10/15/2017.
@@ -102,6 +104,18 @@ public class Painter {
 
 
 	private double shapeDrawStartY;
+
+
+	private StrokeLineCap lineCap;
+
+
+	private double lineSpace;
+
+
+	private boolean needFill;
+
+
+	private double arc;
 	
 
 
@@ -138,7 +152,7 @@ public class Painter {
 		
 	}
 
-	public void mouseMove(double x, double y) {
+	public void mouseDrag(double x, double y) {
 
 	
        if(type==PaintType.PEN&&mousePress)
@@ -162,8 +176,9 @@ public class Painter {
        else if(type==PaintType.RECT)
        {
     	   clearCanvas(tempCanvas);
-    	   drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY,tempCanvas);
+    	   drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY,tempCanvas,!needFill);
        }
+       
 
        lastX=x;
        lastY=y;
@@ -171,12 +186,37 @@ public class Painter {
     }
 
     
-    private void drawRect(double x, double y, double width, double height, Canvas canvas) {
-		canvas.getGraphicsContext2D().fillRect(x, y, width, height);
+    private void drawRect(double x, double y, double width, double height, Canvas canvas,boolean isStroke) {
+    	
+    	if(isStroke)
+    	{
+    		if(arc!=0)
+    		{
+    			canvas.getGraphicsContext2D().strokeRoundRect(x, y, width, height, arc, arc);
+    		}
+    		else
+    		{
+    			canvas.getGraphicsContext2D().strokeRect(x, y, width, height);
+    		}
+    		
+    	}
+    	else
+    	{
+    		if(arc!=0)
+    		{
+    			canvas.getGraphicsContext2D().fillRoundRect(x, y, width, height, arc,arc);
+    		}
+    		else
+    		{
+    			canvas.getGraphicsContext2D().fillRect(x, y, width, height);
+    		}
+    		
+    	}
 		
 	}
 
 	private void clearRectBySize(double width, double height) {
+	
     	 currentCanvas.getGraphicsContext2D().clearRect(width, height, eraserSize, eraserSize);
 	}
 
@@ -199,7 +239,7 @@ public class Painter {
         }
         else if(type==PaintType.RECT)
         {
-        	drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY, currentCanvas);
+        	drawRect(shapeDrawStartX, shapeDrawStartY, x-shapeDrawStartX, y-shapeDrawStartY, currentCanvas,!needFill);
         }
     }
 
@@ -228,6 +268,9 @@ public class Painter {
 			graphicsContext2D.setFill(this.fillColor);
 			graphicsContext2D.setLineWidth(lineWidth);
 			graphicsContext2D.setGlobalAlpha(alpha);
+			graphicsContext2D.setLineCap(lineCap);
+			graphicsContext2D.setLineDashes(lineSpace);
+			
 		}
 		
 	}
@@ -339,12 +382,46 @@ public class Painter {
 	}
 
 	public void setTempCanvas(Canvas canvas) {
+
 		this.tempCanvas=canvas;
-		
+		tempCanvas.getGraphicsContext2D().setFill(Color.BLACK);
+		tempCanvas.getGraphicsContext2D().setStroke(Color.BLACK);
+
 	}
 
 	public void clearCurrentCanvas() {
 		clearCanvas(currentCanvas);
 		
+	}
+
+	public void setStrokeLineCap(StrokeLineCap value) {
+		
+		this.lineCap=value;
+		applyPaint();
+	}
+
+	public void setLineSpace(double newValue) {
+		this.lineSpace=newValue;
+		applyPaint();
+		
+	}
+
+	public void mouseMove(double x, double y) {
+		if(type==PaintType.ERASER)
+		{
+			 clearCanvas(tempCanvas);
+	    	 drawRect(x-eraserSize/2, y-eraserSize/2, eraserSize, eraserSize, tempCanvas,true); 
+	    	 drawRect(x-eraserSize/2, y-eraserSize/2, eraserSize, eraserSize, tempCanvas,false); 
+		}
+		
+	}
+
+	public void setNeedFill(boolean selected) {
+		this.needFill=selected;
+		
+	}
+
+	public void setArc(double doubleValue) {
+		this.arc=doubleValue;
 	}
 }

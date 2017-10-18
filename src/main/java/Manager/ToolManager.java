@@ -16,13 +16,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 /**
  * Created by Administrator on 10/15/2017.
  */
 public class ToolManager {
 
-    private static HashMap<PaintType, BaseToolController> map=new HashMap<>();
+    private static HashMap<PaintType, Parent> map=new HashMap<>();
 	private static List<ToolIcon> list;
 
 	/**
@@ -90,27 +91,27 @@ public class ToolManager {
 	 * @param type
 	 * @return
 	 */
-	public static BaseToolController getToolPaneRootByType(PaintType type) {
+	public static Parent getToolPaneRootByType(PaintType type) {
 		if(map.get(type)==null)
 		{
 			switch (type) {
 			case PEN:
-				map.put(type, new Tool_Pen_Controller());
+				map.put(type, Tool.loadFxml("Tool_Pen",null));
 				break;
 			case ERASER:
-				map.put(type, new Tool_Eraser_Controller());
+				map.put(type, Tool.loadFxml("Tool_Eraser",null));
 				break;
 			case BUCKET:
-				map.put(type, new Tool_Bucket_Controller());
+				map.put(type, Tool.loadFxml("Tool_Bucket",null));
 				break;
 			case LINE:
-				map.put(type, new Tool_Bucket_Controller());
+				map.put(type, Tool.loadFxml("Tool_Line",null));
 				break;
 			case CIRCLE:
-				map.put(type, new Tool_Bucket_Controller());
+				map.put(type, Tool.loadFxml("Tool_Circle",null));
 				break;
 			case RECT:
-				map.put(type, new Tool_Bucket_Controller());
+				map.put(type, Tool.loadFxml("Tool_Rect",null));
 				break;
 			default:
 				throw new InvalidParameterException();

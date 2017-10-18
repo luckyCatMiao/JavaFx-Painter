@@ -5,6 +5,7 @@ import Bean.CanvasLayer;
 import Bean.ToolIcon;
 import Cell.CanvasLayerCell;
 import Controller.Component.StageComponent;
+import Manager.EffectFactory;
 import Manager.PaintType;
 import Manager.ToolManager;
 import Tool.Tool;
@@ -13,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -33,7 +35,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -52,6 +57,9 @@ public class PaintController extends BaseController{
 	private Parent root;
 	
 	private StageComponent stageComponent;
+	
+	@FXML
+	private Pane colorChooserPane;
 	
 	public PaintController(Stage primaryStage) {
 		
@@ -101,7 +109,15 @@ public class PaintController extends BaseController{
 		initToolsPane();
 		initMouseEvent();
 		initContextMenu();
+		initColorChooser();
 	}
+
+	private void initColorChooser() {
+		Parent parent=Tool.loadFxml("chooseColor", null);
+		colorChooserPane.getChildren().add(parent);
+	}
+
+
 
 	private void initContextMenu() {
 		//create contextmenu of canvas
@@ -148,7 +164,8 @@ public class PaintController extends BaseController{
 				painter.mousePress(event.getX(), event.getY());
 			}
 		});		
-		stackPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> painter.mouseMove(event.getX(), event.getY()));
+		stackPane.addEventFilter(MouseEvent.MOUSE_MOVED, event -> painter.mouseMove(event.getX(), event.getY()));		
+		stackPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> painter.mouseDrag(event.getX(), event.getY()));
 		stackPane.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> painter.mouseUp(event.getX(), event.getY()));
 		
 	}
@@ -195,6 +212,7 @@ public class PaintController extends BaseController{
 
 	private void initToolsPane() {
 		ToggleGroup group=new ToggleGroup();
+		//load icon
 		for (ToolIcon toolIcon : ToolManager.getTools()) 
 		{
 			RadioButton button=(RadioButton) Tool.loadFxml("Item_Tool", null);
@@ -202,19 +220,12 @@ public class PaintController extends BaseController{
 			imageView.setImage(toolIcon.getImage());
 			button.setText(toolIcon.getName());
 			button.setToggleGroup(group);
-			
-			
-			//select first
-			if(flowPane.getChildren().size()==0)
-			{
-				button.setSelected(true);
-				changeToolSetPane(ToolManager.getTypeByName(button.getText()));
-			}
 			flowPane.getChildren().add(button);
 			flowPane.setMargin(button, new Insets(10));
 			
 		}
 		
+		//add change behavior
 		for(Toggle toggle:group.getToggles())
 		{
 			//because i remove the dot icon of radio button ,so it need to implement selecting behavior manually
@@ -235,7 +246,7 @@ public class PaintController extends BaseController{
 					//remove all effect
 					RadioButton button=(RadioButton) event.getSource();
 					//set the effect to selected item
-					button.setEffect(new DropShadow());
+					button.setEffect(EffectFactory.getDrapShadow(Color.WHITE));
 					button.setSelected(true);
 					
 					PaintType type=ToolManager.getTypeByName(button.getText());
@@ -246,7 +257,14 @@ public class PaintController extends BaseController{
 		
 		}
 		
-		
+		//if has at least one tool,select first
+		if(group.getToggles().size()>0)
+		{
+			RadioButton button=(RadioButton) group.getToggles().get(0);
+			button.setSelected(true);
+			button.setEffect(EffectFactory.getDrapShadow(Color.WHITE));
+			changeToolSetPane(ToolManager.getTypeByName(button.getText()));
+		}
 		
 		
 		
@@ -255,7 +273,7 @@ public class PaintController extends BaseController{
 	protected void changeToolSetPane(PaintType type) {
 		//base on the tool,change the tool setting
 		toolSetGroup.getChildren().clear();
-		Parent root=ToolManager.getToolPaneRootByType(type).getRoot();
+		Parent root=ToolManager.getToolPaneRootByType(type);
 		toolSetGroup.getChildren().add(root);
 		
 	}

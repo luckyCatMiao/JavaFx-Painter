@@ -33,7 +33,7 @@
    <center>
       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="250.0" minWidth="10.0" prefWidth="250.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="270.0" minWidth="10.0" prefWidth="270.0" />
           <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
         </columnConstraints>
         <rowConstraints>
@@ -51,6 +51,7 @@
                      </children>
                   </VBox>
                   <Group fx:id="toolSetGroup" />
+                  <HBox fx:id="colorChooserPane" />
                   <HBox>
                      <children>
                         <Button mnemonicParsing="false" onAction="#createNewLayer" onMouseEntered="#applyShadow" onMouseExited="#removeShadow" stylesheets="@../css/transparentButton.css" text="新建">
