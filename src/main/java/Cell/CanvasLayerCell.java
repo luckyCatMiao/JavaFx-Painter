@@ -4,7 +4,6 @@ package Cell;
 
 import Bean.CanvasLayer;
 import Controller.PaintController;
-import Manager.Painter;
 import Tool.Tool;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,7 +22,7 @@ public class CanvasLayerCell extends ListCell<CanvasLayer> {
 	private TextField layerNameTF;
 	@FXML
 	private Button renameBT;
-	private PaintController paintController;
+	private final PaintController paintController;
 	
 	public CanvasLayerCell(PaintController paintController) {
 		this.paintController = paintController;
@@ -40,15 +39,11 @@ public class CanvasLayerCell extends ListCell<CanvasLayer> {
 			{
 				Parent parent=Tool.loadFxml("Item_Layer_Edit", this);
 				layerNameTF.setText(item.getName());
-				renameBT.setOnAction(new EventHandler<ActionEvent>() {
-					
-					@Override
-					public void handle(ActionEvent event) {
-						getItem().setName(layerNameTF.getText());
-						commitEdit(getItem());
-						
-					}
-				});
+				renameBT.setOnAction(event -> {
+                    getItem().setName(layerNameTF.getText());
+                    commitEdit(getItem());
+
+                });
 				setGraphic(parent);
 				
 			}

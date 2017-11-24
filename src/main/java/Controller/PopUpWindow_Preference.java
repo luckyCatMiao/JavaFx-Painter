@@ -10,7 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class PopUpWindow_Preference extends BaseController{
+class PopUpWindow_Preference extends BaseController{
 	
 	@FXML
 	private TreeView<String> treeView;
@@ -60,15 +60,10 @@ public class PopUpWindow_Preference extends BaseController{
 	   treeView.setEditable(true);
 	   
 
-	   treeView.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>() {
-			
-		@Override
-		public TreeCell<String> call(TreeView<String> param) {
-			// TODO Auto-generated method stub
-			return new PreferenceTreeCell();
-		}
-
-	});
+	   treeView.setCellFactory(param -> {
+           // TODO Auto-generated method stub
+           return new PreferenceTreeCell();
+       });
 		
 	}
 

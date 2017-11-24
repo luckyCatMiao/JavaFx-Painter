@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import Controller.PaintController;
 import javafx.application.Application;
-import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -20,6 +19,8 @@ public class Main extends Application{
 		// TODO Auto-generated method stub
 		super.init();
 		//load value
+
+
 	}
 
 	@Override
@@ -33,7 +34,6 @@ public class Main extends Application{
 	public void stop() throws Exception {
 		// TODO Auto-generated method stub
 		super.stop();
-		//save value
 	}
 	
 }

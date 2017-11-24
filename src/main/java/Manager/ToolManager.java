@@ -1,35 +1,23 @@
 package Manager;
 
-import java.io.File;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 
 import Bean.ToolIcon;
-import Controller.ToolController.BaseToolController;
-import Controller.ToolController.Tool_Bucket_Controller;
-import Controller.ToolController.Tool_Eraser_Controller;
-import Controller.ToolController.Tool_Pen_Controller;
-import Paint.Config;
 import Tool.Tool;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 
 /**
  * Created by Administrator on 10/15/2017.
  */
 public class ToolManager {
 
-    private static HashMap<PaintType, Parent> map=new HashMap<>();
-	private static List<ToolIcon> list;
+    private static final HashMap<PaintType, Parent> map=new HashMap<>();
+	private static final List<ToolIcon> list;
 
-	/**
-	 * init the tool list
-	 */
-    static
+	static
     {
     	  list= FXCollections.observableArrayList();
           list.add(new ToolIcon("铅笔",Tool.loadImage("pen")));

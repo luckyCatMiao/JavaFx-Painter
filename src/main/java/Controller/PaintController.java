@@ -14,7 +14,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -35,7 +34,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -53,40 +51,31 @@ public class PaintController extends BaseController{
 	private StackPane stackPane;
 	@FXML
 	private Group toolSetGroup;
-	private Stage stage;
-	private Parent root;
-	
-	private StageComponent stageComponent;
-	
+	private final Stage stage;
+
 	@FXML
 	private Pane colorChooserPane;
 	
 	public PaintController(Stage primaryStage) {
 		
 		stage = primaryStage;
-		this.root=loadFxml("Main");
+		Parent root = loadFxml("Main");
 		createWindow(primaryStage, root, "Paint");
 		initStage();
 		initView();
 	
-		
-		
 	}
 
 
 	
 	private void initStage() {
-		this.stageComponent=new StageComponent(this,stage);
+		StageComponent stageComponent = new StageComponent(this, stage);
 		stageComponent.initDragAndDrop(url->addImageToNewCanvasByUrl(url));
 		stageComponent.initToggleFullScreen();
-		stageComponent.setOnCloseListener(new EventHandler<WindowEvent>() {
+		stageComponent.setOnCloseListener(event -> {
+            //deal with unsaved change
 
-			@Override
-			public void handle(WindowEvent event) {
-				//deal with unsaved change
-				
-			}
-		});
+        });
 		
 		
 	}
@@ -145,32 +134,29 @@ public class PaintController extends BaseController{
 		
 	}
 
-	protected void save() {
+	private void save() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	protected void clearCurrentCanvas() {
+	private void clearCurrentCanvas() {
 		painter.clearCurrentCanvas();
 		
 	}
 
 	private void initMouseEvent() {
 
-		stackPane.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				checkCurrentCanvas();
-				painter.mousePress(event.getX(), event.getY());
-			}
-		});		
+		stackPane.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            checkCurrentCanvas();
+            painter.mousePress(event.getX(), event.getY());
+        });
 		stackPane.addEventFilter(MouseEvent.MOUSE_MOVED, event -> painter.mouseMove(event.getX(), event.getY()));		
 		stackPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, event -> painter.mouseDrag(event.getX(), event.getY()));
 		stackPane.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> painter.mouseUp(event.getX(), event.getY()));
 		
 	}
 
-	protected void checkCurrentCanvas() {
+	private void checkCurrentCanvas() {
 		if(painter.getcurrentCanvas()==null)
 		{
 			Alert alert = new Alert(AlertType.INFORMATION);
@@ -188,24 +174,19 @@ public class PaintController extends BaseController{
 		canvasLV.setEditable(true);
 		canvasLV.setCellFactory(param -> new CanvasLayerCell(this));
 		//set the currentCanvas of painter be the selected item of list
-		canvasLV.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CanvasLayer>() {
+		canvasLV.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                //it's very weird when editing be commited that list will be unselect,and the newValue
+                //will be null,this only occur when list has only one child
+                if(newValue==null)
+                {
+                    if(canvasLV.getItems().size()>0)
+                    {
+                        canvasLV.getSelectionModel().select(0);
+                    }
+                }
+                painter.setCurrentCanvas(canvasLV.getSelectionModel().getSelectedItem());
 
-			@Override
-			public void changed(ObservableValue<? extends CanvasLayer> observable, CanvasLayer oldValue,
-					CanvasLayer newValue) {
-					//it's very weird when editing be commited that list will be unselect,and the newValue 
-					//will be null,this only occur when list has only one child
-					if(newValue==null)
-					{
-						if(canvasLV.getItems().size()>0)
-						{
-							canvasLV.getSelectionModel().select(0);
-						}
-					}
-					painter.setCurrentCanvas(canvasLV.getSelectionModel().getSelectedItem());
-					
-			}
-		});
+        });
 		
 
 	}
@@ -221,7 +202,7 @@ public class PaintController extends BaseController{
 			button.setText(toolIcon.getName());
 			button.setToggleGroup(group);
 			flowPane.getChildren().add(button);
-			flowPane.setMargin(button, new Insets(10));
+			FlowPane.setMargin(button, new Insets(10));
 			
 		}
 		
@@ -231,29 +212,25 @@ public class PaintController extends BaseController{
 			//because i remove the dot icon of radio button ,so it need to implement selecting behavior manually
 			
 			Control control=(Control) toggle;
-			control.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			control.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
-				@Override
-				public void handle(MouseEvent event) {
-					
-					
-					for(Toggle toggle:group.getToggles())
-					{
-						RadioButton control=(RadioButton) toggle;
-						control.setEffect(null);
-						control.setSelected(false);
-					}
-					//remove all effect
-					RadioButton button=(RadioButton) event.getSource();
-					//set the effect to selected item
-					button.setEffect(EffectFactory.getDrapShadow(Color.WHITE));
-					button.setSelected(true);
-					
-					PaintType type=ToolManager.getTypeByName(button.getText());
-					painter.setType(type);
-					changeToolSetPane(type);
-				}
-			});
+
+                for(Toggle toggle1 :group.getToggles())
+                {
+                    RadioButton control1 =(RadioButton) toggle1;
+                    control1.setEffect(null);
+                    control1.setSelected(false);
+                }
+                //remove all effect
+                RadioButton button=(RadioButton) event.getSource();
+                //set the effect to selected item
+                button.setEffect(EffectFactory.getDrapShadow(Color.WHITE));
+                button.setSelected(true);
+
+                PaintType type=ToolManager.getTypeByName(button.getText());
+                painter.setType(type);
+                changeToolSetPane(type);
+            });
 		
 		}
 		
@@ -270,7 +247,7 @@ public class PaintController extends BaseController{
 		
 	}
 
-	protected void changeToolSetPane(PaintType type) {
+	private void changeToolSetPane(PaintType type) {
 		//base on the tool,change the tool setting
 		toolSetGroup.getChildren().clear();
 		Parent root=ToolManager.getToolPaneRootByType(type);
@@ -308,7 +285,7 @@ public class PaintController extends BaseController{
 	
 
 	@FXML
-	public void createNewLayer()
+	private void createNewLayer()
 	{
 		painter.addCanvas(createCanvasAndAddToPane());
 		selectLastCanvas();

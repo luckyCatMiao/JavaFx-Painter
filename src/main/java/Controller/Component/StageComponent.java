@@ -14,7 +14,7 @@ import javafx.stage.WindowEvent;
 
 public class StageComponent extends BaseComponent {
 
-	private Stage stage;
+	private final Stage stage;
 
 	public StageComponent(PaintController paintController, Stage stage) {
 		super(paintController);
@@ -51,27 +51,23 @@ public class StageComponent extends BaseComponent {
 		
 		stage.setFullScreenExitHint("按G键切换全屏模式");
 		stage.setFullScreen(true);
-		stage.addEventFilter(KeyEvent.KEY_RELEASED, new EventHandler<KeyEvent>() {
+		stage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
 
-			@Override
-			public void handle(KeyEvent event) {
-				
-				if(event.getCode().equals(KeyCode.G))
-				{
-					if(stage.fullScreenProperty().get()==true)
-					{
-						
-						stage.setFullScreen(false);
-					}
-					else
-					{
-						stage.setFullScreen(true);
-					}
-				}
-				event.consume();
-				
-			}
-		});
+            if(event.getCode().equals(KeyCode.G))
+            {
+                if(stage.fullScreenProperty().get())
+                {
+
+                    stage.setFullScreen(false);
+                }
+                else
+                {
+                    stage.setFullScreen(true);
+                }
+            }
+            event.consume();
+
+        });
 		
 	}
 

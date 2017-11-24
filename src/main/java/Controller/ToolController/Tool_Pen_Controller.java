@@ -24,46 +24,39 @@ public class Tool_Pen_Controller extends BaseToolController{
 	}
 	
 
-	protected void initView() {
+	private void initView() {
 		penWidthSB.valueProperty().addListener((ChangeListener<Number>) (observable, oldValue, newValue) -> painter.setLineWidth(newValue.doubleValue()));
 		capCB.getItems().addAll("无","圆","方");
-		capCB.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+		capCB.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            StrokeLineCap value = null;
+            switch (newValue) {
+            case "无":
+                value=StrokeLineCap.BUTT;
+                break;
+            case "圆":
+                value=StrokeLineCap.ROUND;
+                break;
+            case "方":
+                value=StrokeLineCap.SQUARE;
+                break;
 
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				StrokeLineCap value = null;
-				switch (newValue) {
-				case "无":
-					value=StrokeLineCap.BUTT;
-					break;
-				case "圆":
-					value=StrokeLineCap.ROUND;
-					break;
-				case "方":
-					value=StrokeLineCap.SQUARE;
-					break;
-					
 
-				default:
-					break;
-				}
-				painter.setStrokeLineCap(value);
-				
-			}
-		});
+            default:
+                break;
+            }
+            painter.setStrokeLineCap(value);
+
+        });
 		
 		capCB.getSelectionModel().selectFirst();
 
 		
-		spaceSB.valueProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				if(newValue.doubleValue()!=0)
-				{
-					painter.setLineSpace(newValue.doubleValue());
-				}
-			}
-		});
+		spaceSB.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.doubleValue()!=0)
+            {
+                painter.setLineSpace(newValue.doubleValue());
+            }
+        });
 	}
 	
 

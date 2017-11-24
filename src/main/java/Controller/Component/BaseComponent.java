@@ -1,11 +1,9 @@
 package Controller.Component;
 
-public class BaseComponent {
+class BaseComponent {
 
-	private Object host;
-
-	public BaseComponent(Object object) {
-		this.host=object;
+	BaseComponent(Object object) {
+		Object host = object;
 	}
 
 }

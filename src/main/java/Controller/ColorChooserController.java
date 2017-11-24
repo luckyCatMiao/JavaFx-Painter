@@ -17,7 +17,7 @@ public class ColorChooserController extends BaseController implements Initializa
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-		fillColorPicker.valueProperty().addListener((ChangeListener<Color>) (observable, oldValue, newValue) -> painter.setFill(newValue));
+		fillColorPicker.valueProperty().addListener((observable, oldValue, newValue) -> painter.setFill(newValue));
 		strokeColorPicker.valueProperty().addListener((ChangeListener<Color>) (observable, oldValue, newValue) -> painter.setStroke(newValue));
 	
 		//set init color

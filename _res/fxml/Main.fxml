@@ -24,105 +24,82 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style2.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
    <bottom>
-      <HBox BorderPane.alignment="CENTER">
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="asda" />
-         </children>
-      </HBox>
+       <HBox BorderPane.alignment="CENTER">
+           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="asda"/>
+       </HBox>
    </bottom>
    <center>
-      <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
-        <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="270.0" minWidth="10.0" prefWidth="270.0" />
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <FlowPane fx:id="flowPane" alignment="CENTER">
-                           <padding>
-                              <Insets left="-20.0" />
-                           </padding></FlowPane>
-                     </children>
-                  </VBox>
-                  <Group fx:id="toolSetGroup" />
-                  <HBox fx:id="colorChooserPane" />
-                  <HBox>
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#createNewLayer" onMouseEntered="#applyShadow" onMouseExited="#removeShadow" stylesheets="@../css/transparentButton.css" text="新建">
-                           <graphic>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../img/new.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <tooltip>
-                              <Tooltip text="新建图层" />
-                           </tooltip></Button>
-                        <Button mnemonicParsing="false" onAction="#deleteSelectedLayer" onMouseEntered="#applyShadow" onMouseExited="#removeShadow" stylesheets="@../css/transparentButton.css" text="删除">
-                           <graphic>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../img/delete.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <tooltip>
-                              <Tooltip text="删除选中的图层" />
-                           </tooltip></Button>
-                     </children>
-                  </HBox>
-                  <ListView fx:id="canvasLV" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
-               <content>
-                  <StackPane fx:id="stackPane" />
-               </content>
-            </ScrollPane>
-         </children>
-      </GridPane>
+       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+           <columnConstraints>
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="270.0" minWidth="10.0" prefWidth="270.0"/>
+               <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0"/>
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+           </rowConstraints>
+           <VBox>
+               <VBox>
+                   <FlowPane fx:id="flowPane" alignment="CENTER">
+                       <padding>
+                           <Insets left="-20.0"/>
+                       </padding>
+                   </FlowPane>
+               </VBox>
+               <Group fx:id="toolSetGroup"/>
+               <HBox fx:id="colorChooserPane"/>
+               <HBox>
+                   <Button mnemonicParsing="false" onAction="#createNewLayer" onMouseEntered="#applyShadow"
+                           onMouseExited="#removeShadow" stylesheets="@../css/transparentButton.css" text="新建">
+                       <graphic>
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <Image url="@../img/new.png"/>
+                           </ImageView>
+                       </graphic>
+                       <tooltip>
+                           <Tooltip text="新建图层"/>
+                       </tooltip>
+                   </Button>
+                   <Button mnemonicParsing="false" onAction="#deleteSelectedLayer" onMouseEntered="#applyShadow"
+                           onMouseExited="#removeShadow" stylesheets="@../css/transparentButton.css" text="删除">
+                       <graphic>
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <Image url="@../img/delete.png"/>
+                           </ImageView>
+                       </graphic>
+                       <tooltip>
+                           <Tooltip text="删除选中的图层"/>
+                       </tooltip>
+                   </Button>
+               </HBox>
+               <ListView fx:id="canvasLV" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS"/>
+           </VBox>
+           <ScrollPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <StackPane fx:id="stackPane"/>
+           </ScrollPane>
+       </GridPane>
    </center>
    <top>
-      <VBox BorderPane.alignment="CENTER">
-         <children>
-            <MenuBar>
-              <menus>
-                <Menu mnemonicParsing="false" text="文件">
-                  <items>
-                        <MenuItem mnemonicParsing="false" text="打开" />
-                        <MenuItem mnemonicParsing="false" text="保存">
-                           <accelerator>
-                              <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                           </accelerator>
-                        </MenuItem>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="编辑">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="设置">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="帮助">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#preferencePress" text="首选项" />
-                    </items>
-                  </Menu>
-              </menus>
-            </MenuBar>
-         </children>
-      </VBox>
+       <VBox BorderPane.alignment="CENTER">
+           <MenuBar>
+               <Menu mnemonicParsing="false" text="文件">
+                   <MenuItem mnemonicParsing="false" text="打开"/>
+                   <MenuItem mnemonicParsing="false" text="保存">
+                       <accelerator>
+                           <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+                       </accelerator>
+                   </MenuItem>
+                   <MenuItem mnemonicParsing="false" text="Close"/>
+               </Menu>
+               <Menu mnemonicParsing="false" text="编辑">
+                   <MenuItem mnemonicParsing="false" text="Delete"/>
+               </Menu>
+               <Menu mnemonicParsing="false" text="设置">
+                   <MenuItem mnemonicParsing="false" text="About"/>
+               </Menu>
+               <Menu mnemonicParsing="false" text="帮助">
+                   <MenuItem mnemonicParsing="false" onAction="#preferencePress" text="首选项"/>
+               </Menu>
+           </MenuBar>
+       </VBox>
    </top>
 </BorderPane>

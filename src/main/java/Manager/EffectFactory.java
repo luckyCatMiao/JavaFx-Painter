@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 public class EffectFactory {
 
-	private static Map<Color, DropShadow> drapShawowMap=new HashMap<>();
+	private static final Map<Color, DropShadow> drapShawowMap=new HashMap<>();
 
 	public static Effect getDrapShadow(Color color) {
 		

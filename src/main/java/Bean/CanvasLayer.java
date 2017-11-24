@@ -39,7 +39,8 @@ public class CanvasLayer {
 
 	public CanvasLayer clone()
 	{
-	
+
+
 		return new CanvasLayer(canvas, name);
 	}
 	

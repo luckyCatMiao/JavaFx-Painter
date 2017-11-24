@@ -2,22 +2,15 @@ package Manager;
 
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.print.attribute.standard.MediaSize.NA;
 
 import Bean.CanvasLayer;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineCap;
 
 /**
@@ -74,7 +67,7 @@ public class Painter {
 	/**
 	 * save all canvas beside temp and back canvas
 	 */
-    private ObservableList<CanvasLayer> canvaList=FXCollections.observableArrayList();
+    private final ObservableList<CanvasLayer> canvaList=FXCollections.observableArrayList();
 
     
     
@@ -253,7 +246,7 @@ public class Painter {
 		
 	}
 
-	public void redrawBackCanvas() {
+	private void redrawBackCanvas() {
 
 		backCanvas.getGraphicsContext2D().fillRect(0, 0, backCanvas.getWidth(), backCanvas.getHeight());
 		
@@ -364,7 +357,7 @@ public class Painter {
 		return currentCanvas;
 	}
 
-	public void clearCanvas(Canvas canvas) {
+	private void clearCanvas(Canvas canvas) {
 		
 		if(canvas!=null)
 		{

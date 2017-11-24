@@ -19,14 +19,7 @@ public class Tool_Rect_Controller extends BaseToolController {
 		
 		painter.setNeedFill(ssRB.isSelected());
 		
-		YJSB.valueProperty().addListener(new ChangeListener<Number>() {
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				painter.setArc(newValue.doubleValue());
-				
-			}
-		});
+		YJSB.valueProperty().addListener((observable, oldValue, newValue) -> painter.setArc(newValue.doubleValue()));
 
 	}
 
